@@ -27,6 +27,8 @@ systemctl start nginx
 
 systemctl enable nginx
 
+apt remove --purge apache2 -y
+
 apt install mariadb-server -y
 
 # 数据库连接参数
