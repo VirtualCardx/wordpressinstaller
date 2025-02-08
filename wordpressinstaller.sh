@@ -3,15 +3,15 @@ echo "请输入域名："
 read domain
 [ ! $domain ] && domain=test.com
 
-echo "请输入数据库名："
+echo "请输入数据库名，如果为空则默认为'WordPressDataBase'："
 read wp_database_name
 [ ! $wp_database_name ] && wp_database_name="WordPressDataBase"
 
-echo "请输入数据库访问账号："
+echo "请输入数据库访问账号,如果为空则默认为'WordPressUserName'："
 read wp_username
 [ ! $wp_user_name ] && wp_user_name="WordPressUserName"
 
-echo "请输入数据库访问密码："
+echo "请输入数据库访问密码,如果为空则默认为'WordPressPassWord'："
 read wp_password
 [ ! $wp_password ] && wp_password="WordPressPassWord"
 
@@ -69,5 +69,25 @@ tar xzvf latest.tar.gz
 cp -a /tmp/wordpress/. /var/www/wordpress
 
 chown -R www-data:www-data /var/www/wordpress
+
+php_version_dir=$(find /etc/php/ -type d -mindepth 1 -maxdepth 1 | head -n 1)
+
+sed -i 's/^max_execution_time.*\+=.*/max_execution_time = 1200/' $php_version_dir/fpm/php.ini
+sed -i 's/^max_input_time.*\+=.*/max_input_time = 1200/' $php_version_dir/fpm/php.ini
+sed -i 's/^upload_max_filesize.*\+=.*/upload_max_filesize = 2000M/' $php_version_dir/fpm/php.ini
+sed -i 's/^post_max_size.*\+=.*/post_max_size = 2000m/' $php_version_dir/fpm/php.ini
+sed -i 's/^upload_max_filesize.*\+=.*/upload_max_filesize = 1200/' $php_version_dir/fpm/php.ini
+
+systemctl restart php8.2-fpm 
+
+nginx_conf="/etc/nginx/nginx.conf"
+
+if grep -q "client_max_body_size" "$nginx_conf"; then
+    echo "配置文件中已经存在 client_max_body_size，跳过添加"
+else
+	sed -i '/^[[:space:]]*http {/a \    client_max_body_size 2000m;' "$nginx_conf"
+	echo "已成功在 http{} 块中添加 client_max_body_size 2000m;"
+
+systemctl restart nginx
 
 echo "完成安装!"
