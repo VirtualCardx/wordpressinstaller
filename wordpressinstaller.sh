@@ -89,6 +89,7 @@ if grep -q "client_max_body_size" "$nginx_conf"; then
 else
 	sed -i '/^[[:space:]]*http {/a \    client_max_body_size 2000m;' "$nginx_conf"
 	echo "已成功在 http{} 块中添加 client_max_body_size 2000m;"
+fi
 
 systemctl restart nginx
 
