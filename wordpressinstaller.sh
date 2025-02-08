@@ -1,0 +1,73 @@
+#/bin/bash
+echo "请输入域名："
+read domain
+[ ! $domain ] && domain=test.com
+
+echo "请输入数据库名："
+read wp_database_name
+[ ! $wp_database_name ] && wp_database_name="WordPressDataBase"
+
+echo "请输入数据库访问账号："
+read wp_username
+[ ! $wp_user_name ] && wp_user_name="WordPressUserName"
+
+echo "请输入数据库访问密码："
+read wp_password
+[ ! $wp_password ] && wp_password="WordPressPassWord"
+
+echo "开始安装"
+echo "更新源"
+apt update -y
+echo "更新系统"
+apt upgrade -y
+
+apt install nginx -y
+
+systemctl start nginx
+
+systemctl enable nginx
+
+apt install mariadb-server -y
+
+# 数据库连接参数
+mysql -u root -p' ' -e "CREATE DATABASE $wp_database_name;"
+mysql -u root -p' ' -e "CREATE USER '$wp_user_name'@localhost IDENTIFIED BY '$wp_database_name';"
+mysql -u root -p' ' -e "GRANT ALL PRIVILEGES ON $wp_database_name.* TO $wp_user_name@localhost IDENTIFIED BY '$wp_password';"
+mysql -u root -p' ' -e "FLUSH PRIVILEGES;"
+mysql -u root -p' ' -e "EXIT;"
+
+apt install php php-mysql php-gd php-xml php-mbstring php-curl php-fpm php-mysql php-imagick php-zip php-intl -y
+
+printf "server {\n\
+	listen 80; \n\
+	server_name www.$domain $domain; \n\
+	root /var/www/wordpress;\n\
+	index index.php index.html index.htm;\n\
+	location / { \n\
+	try_files \$uri \$uri/ /index.php?\$args;\n\
+	}\n\
+
+	location ~ \.php$ {\n\
+	include snippets/fastcgi-php.conf;\n\
+	fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;\n\
+	fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n\
+	include fastcgi_params;\n\
+	}\n\
+	location ~ /\.ht {\n\
+	deny all;\n\
+	}\n\
+}" > /etc/nginx/sites-available/wordpress
+
+ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/
+nginx -t
+systemctl restart nginx
+
+cd /tmp
+curl -O https://wordpress.org/latest.tar.gz
+
+tar xzvf latest.tar.gz
+cp -a /tmp/wordpress/. /var/www/wordpress
+
+chown -R www-data:www-data /var/www/wordpress
+
+echo "完成安装!"
