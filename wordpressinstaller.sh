@@ -91,5 +91,4 @@ else
 	echo "已成功在 http{} 块中添加 client_max_body_size 2000m;"
 
 systemctl restart nginx
-
 echo "完成安装!"
