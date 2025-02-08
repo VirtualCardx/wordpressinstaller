@@ -72,7 +72,7 @@ cp -a /tmp/wordpress/. /var/www/wordpress
 
 chown -R www-data:www-data /var/www/wordpress
 
-php_version_dir=$(find /etc/php/ -type d -mindepth 1 -maxdepth 1 | head -n 1)
+php_version_dir=$(find /etc/php/ -mindepth 1 -maxdepth 1 -type d  | head -n 1)
 
 sed -i 's/^max_execution_time.*\+=.*/max_execution_time = 1200/' $php_version_dir/fpm/php.ini
 sed -i 's/^max_input_time.*\+=.*/max_input_time = 1200/' $php_version_dir/fpm/php.ini
@@ -91,4 +91,5 @@ else
 	echo "已成功在 http{} 块中添加 client_max_body_size 2000m;"
 
 systemctl restart nginx
+
 echo "完成安装!"
