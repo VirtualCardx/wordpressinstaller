@@ -3,6 +3,10 @@ echo "请输入域名："
 read domain
 [ ! $domain ] && domain=test.com
 
+echo "请输入接收域名过期提醒的邮箱，如果为空则默认为'test@test.com'："
+read email
+[ ! $email ] && email="test@test.com"
+
 echo "请输入数据库名，如果为空则默认为'WordPressDataBase'："
 read wp_database_name
 [ ! $wp_database_name ] && wp_database_name="WordPressDataBase"
@@ -92,5 +96,8 @@ else
 fi
 
 systemctl restart nginx
+
+# Certbot
+certbot --nginx --non-interactive --eff-email --agree-tos --redirect -m $email --domain $domain --domain "www.$domain"
 
 echo "完成安装!"
