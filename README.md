@@ -1,5 +1,5 @@
-# wordpressinstaller
-install wordpress on linux automatic
+# 一键安装wordpress
+> Debian环境下一键安装wordpress
 
 ## 安装方法：
 ```bash
