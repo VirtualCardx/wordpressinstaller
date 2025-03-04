@@ -35,12 +35,14 @@ apt remove --purge apache2 -y
 
 apt install mariadb-server -y
 
+pause
 # 数据库连接参数
 mysql -u root -p' ' -e "CREATE DATABASE $wp_database_name;"
 mysql -u root -p' ' -e "CREATE USER '$wp_user_name'@localhost IDENTIFIED BY '$wp_database_name';"
 mysql -u root -p' ' -e "GRANT ALL PRIVILEGES ON $wp_database_name.* TO $wp_user_name@localhost IDENTIFIED BY '$wp_password';"
 mysql -u root -p' ' -e "FLUSH PRIVILEGES;"
 mysql -u root -p' ' -e "EXIT;"
+pause
 
 apt install php php-mysql php-gd php-xml php-mbstring php-curl php-fpm php-mysql php-imagick php-zip php-intl -y
 
