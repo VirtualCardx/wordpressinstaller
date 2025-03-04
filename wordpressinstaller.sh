@@ -12,7 +12,7 @@ read wp_database_name
 [ ! $wp_database_name ] && wp_database_name="WordPressDataBase"
 
 echo "请输入数据库访问账号,如果为空则默认为'WordPressUserName'："
-read wp_username
+read wp_user_name
 [ ! $wp_user_name ] && wp_user_name="WordPressUserName"
 
 echo "请输入数据库访问密码,如果为空则默认为'WordPressPassWord'："
