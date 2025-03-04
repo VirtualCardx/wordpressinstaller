@@ -24,7 +24,7 @@ echo "更新源"
 apt update -y
 echo "更新系统"
 apt upgrade -y
-
+apt update -y
 apt install nginx -y
 
 systemctl start nginx
