@@ -98,6 +98,6 @@ fi
 systemctl restart nginx
 
 # Certbot
-certbot --nginx --non-interactive --eff-email --agree-tos --redirect -m $email --domain $domain --domain "www.$domain"
+#certbot --nginx --non-interactive --eff-email --agree-tos --redirect -m $email --domain $domain --domain "www.$domain"
 
 echo "完成安装!"
