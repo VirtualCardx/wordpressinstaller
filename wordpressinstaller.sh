@@ -81,7 +81,6 @@ sed -i 's/^max_execution_time.*\+=.*/max_execution_time = 1200/' $php_version_di
 sed -i 's/^max_input_time.*\+=.*/max_input_time = 1200/' $php_version_dir/fpm/php.ini
 sed -i 's/^upload_max_filesize.*\+=.*/upload_max_filesize = 2000M/' $php_version_dir/fpm/php.ini
 sed -i 's/^post_max_size.*\+=.*/post_max_size = 2000m/' $php_version_dir/fpm/php.ini
-sed -i 's/^upload_max_filesize.*\+=.*/upload_max_filesize = 1200/' $php_version_dir/fpm/php.ini
 
 systemctl restart php8.2-fpm 
 
